@@ -1,92 +1,93 @@
 /*
-Тема “Сложные запросы”
+РўРµРјР° вЂњРЎР»РѕР¶РЅС‹Рµ Р·Р°РїСЂРѕСЃС‹вЂќ
 */
 
 USE shop;
 
-/* Заполнение тестовыми данными
+/* Р—Р°РїРѕР»РЅРµРЅРёРµ С‚РµСЃС‚РѕРІС‹РјРё РґР°РЅРЅС‹РјРё
 DESC orders ;
 INSERT INTO orders (user_id) VALUES (1),(1),(1),(2),(3);
 DESC orders_products ;
 INSERT INTO orders_products (order_id,product_id,total) VALUES (1,1,1),(1,2,2),(2,1,3),(4,4,3),(5,7,1),(6,6,2),(7,5,3),(8,7,3);
 */
 
--- Составьте список пользователей users, которые осуществили хотя бы один заказ orders в интернет магазине.
-SELECT name FROM users U
-	WHERE EXISTS(SELECT 1 FROM orders WHERE user_id = U.id);
+-- РЎРѕСЃС‚Р°РІСЊС‚Рµ СЃРїРёСЃРѕРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ users, РєРѕС‚РѕСЂС‹Рµ РѕСЃСѓС‰РµСЃС‚РІРёР»Рё С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ Р·Р°РєР°Р· orders РІ РёРЅС‚РµСЂРЅРµС‚ РјР°РіР°Р·РёРЅРµ.
+SELECT name FROM users
+	WHERE EXISTS(SELECT 1 FROM orders WHERE user_id = users.id);
 
 
--- Выведите список товаров products и разделов catalogs, который соответствует товару.
+
+-- Р’С‹РІРµРґРёС‚Рµ СЃРїРёСЃРѕРє С‚РѕРІР°СЂРѕРІ products Рё СЂР°Р·РґРµР»РѕРІ catalogs, РєРѕС‚РѕСЂС‹Р№ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ С‚РѕРІР°СЂСѓ.
 
 SELECT  P.name AS product_name,
 		C.name AS catalog_name
 	FROM products AS P
 	INNER JOIN catalogs AS C on C.id = P.catalog_id;
 
- /*Код создания таблиц базы данных
+ /*РљРѕРґ СЃРѕР·РґР°РЅРёСЏ С‚Р°Р±Р»РёС† Р±Р°Р·С‹ РґР°РЅРЅС‹С…
 DROP TABLE IF EXISTS catalogs;
 CREATE TABLE catalogs (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) COMMENT 'Название раздела',
+  name VARCHAR(255) COMMENT 'РќР°Р·РІР°РЅРёРµ СЂР°Р·РґРµР»Р°',
   UNIQUE unique_name(name(10))
-) COMMENT = 'Разделы интернет-магазина';
+) COMMENT = 'Р Р°Р·РґРµР»С‹ РёРЅС‚РµСЂРЅРµС‚-РјР°РіР°Р·РёРЅР°';
 
 INSERT INTO catalogs VALUES
-  (NULL, 'Процессоры'),
-  (NULL, 'Материнские платы'),
-  (NULL, 'Видеокарты'),
-  (NULL, 'Жесткие диски'),
-  (NULL, 'Оперативная память');
+  (NULL, 'РџСЂРѕС†РµСЃСЃРѕСЂС‹'),
+  (NULL, 'РњР°С‚РµСЂРёРЅСЃРєРёРµ РїР»Р°С‚С‹'),
+  (NULL, 'Р’РёРґРµРѕРєР°СЂС‚С‹'),
+  (NULL, 'Р–РµСЃС‚РєРёРµ РґРёСЃРєРё'),
+  (NULL, 'РћРїРµСЂР°С‚РёРІРЅР°СЏ РїР°РјСЏС‚СЊ');
 
 DROP TABLE IF EXISTS rubrics;
 CREATE TABLE rubrics (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) COMMENT 'Название раздела'
-) COMMENT = 'Разделы интернет-магазина';
+  name VARCHAR(255) COMMENT 'РќР°Р·РІР°РЅРёРµ СЂР°Р·РґРµР»Р°'
+) COMMENT = 'Р Р°Р·РґРµР»С‹ РёРЅС‚РµСЂРЅРµС‚-РјР°РіР°Р·РёРЅР°';
 
 INSERT INTO rubrics VALUES
-  (NULL, 'Видеокарты'),
-  (NULL, 'Память');
+  (NULL, 'Р’РёРґРµРѕРєР°СЂС‚С‹'),
+  (NULL, 'РџР°РјСЏС‚СЊ');
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) COMMENT 'Имя покупателя',
-  birthday_at DATE COMMENT 'Дата рождения',
+  name VARCHAR(255) COMMENT 'РРјСЏ РїРѕРєСѓРїР°С‚РµР»СЏ',
+  birthday_at DATE COMMENT 'Р”Р°С‚Р° СЂРѕР¶РґРµРЅРёСЏ',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) COMMENT = 'Покупатели';
+) COMMENT = 'РџРѕРєСѓРїР°С‚РµР»Рё';
 
 INSERT INTO users (name, birthday_at) VALUES
-  ('Геннадий', '1990-10-05'),
-  ('Наталья', '1984-11-12'),
-  ('Александр', '1985-05-20'),
-  ('Сергей', '1988-02-14'),
-  ('Иван', '1998-01-12'),
-  ('Мария', '1992-08-29');
+  ('Р“РµРЅРЅР°РґРёР№', '1990-10-05'),
+  ('РќР°С‚Р°Р»СЊСЏ', '1984-11-12'),
+  ('РђР»РµРєСЃР°РЅРґСЂ', '1985-05-20'),
+  ('РЎРµСЂРіРµР№', '1988-02-14'),
+  ('РРІР°РЅ', '1998-01-12'),
+  ('РњР°СЂРёСЏ', '1992-08-29');
 
 DROP TABLE IF EXISTS products;
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) COMMENT 'Название',
-  desription TEXT COMMENT 'Описание',
-  price DECIMAL (11,2) COMMENT 'Цена',
+  name VARCHAR(255) COMMENT 'РќР°Р·РІР°РЅРёРµ',
+  desription TEXT COMMENT 'РћРїРёСЃР°РЅРёРµ',
+  price DECIMAL (11,2) COMMENT 'Р¦РµРЅР°',
   catalog_id INT UNSIGNED,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY index_of_catalog_id (catalog_id)
-) COMMENT = 'Товарные позиции';
+) COMMENT = 'РўРѕРІР°СЂРЅС‹Рµ РїРѕР·РёС†РёРё';
 
 INSERT INTO products
   (name, desription, price, catalog_id)
 VALUES
-  ('Intel Core i3-8100', 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.', 7890.00, 1),
-  ('Intel Core i5-7400', 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.', 12700.00, 1),
-  ('AMD FX-8320E', 'Процессор для настольных персональных компьютеров, основанных на платформе AMD.', 4780.00, 1),
-  ('AMD FX-8320', 'Процессор для настольных персональных компьютеров, основанных на платформе AMD.', 7120.00, 1),
-  ('ASUS ROG MAXIMUS X HERO', 'Материнская плата ASUS ROG MAXIMUS X HERO, Z370, Socket 1151-V2, DDR4, ATX', 19310.00, 2),
-  ('Gigabyte H310M S2H', 'Материнская плата Gigabyte H310M S2H, H310, Socket 1151-V2, DDR4, mATX', 4790.00, 2),
-  ('MSI B250M GAMING PRO', 'Материнская плата MSI B250M GAMING PRO, B250, Socket 1151, DDR4, mATX', 5060.00, 2);
+  ('Intel Core i3-8100', 'РџСЂРѕС†РµСЃСЃРѕСЂ РґР»СЏ РЅР°СЃС‚РѕР»СЊРЅС‹С… РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹С… РєРѕРјРїСЊСЋС‚РµСЂРѕРІ, РѕСЃРЅРѕРІР°РЅРЅС‹С… РЅР° РїР»Р°С‚С„РѕСЂРјРµ Intel.', 7890.00, 1),
+  ('Intel Core i5-7400', 'РџСЂРѕС†РµСЃСЃРѕСЂ РґР»СЏ РЅР°СЃС‚РѕР»СЊРЅС‹С… РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹С… РєРѕРјРїСЊСЋС‚РµСЂРѕРІ, РѕСЃРЅРѕРІР°РЅРЅС‹С… РЅР° РїР»Р°С‚С„РѕСЂРјРµ Intel.', 12700.00, 1),
+  ('AMD FX-8320E', 'РџСЂРѕС†РµСЃСЃРѕСЂ РґР»СЏ РЅР°СЃС‚РѕР»СЊРЅС‹С… РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹С… РєРѕРјРїСЊСЋС‚РµСЂРѕРІ, РѕСЃРЅРѕРІР°РЅРЅС‹С… РЅР° РїР»Р°С‚С„РѕСЂРјРµ AMD.', 4780.00, 1),
+  ('AMD FX-8320', 'РџСЂРѕС†РµСЃСЃРѕСЂ РґР»СЏ РЅР°СЃС‚РѕР»СЊРЅС‹С… РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹С… РєРѕРјРїСЊСЋС‚РµСЂРѕРІ, РѕСЃРЅРѕРІР°РЅРЅС‹С… РЅР° РїР»Р°С‚С„РѕСЂРјРµ AMD.', 7120.00, 1),
+  ('ASUS ROG MAXIMUS X HERO', 'РњР°С‚РµСЂРёРЅСЃРєР°СЏ РїР»Р°С‚Р° ASUS ROG MAXIMUS X HERO, Z370, Socket 1151-V2, DDR4, ATX', 19310.00, 2),
+  ('Gigabyte H310M S2H', 'РњР°С‚РµСЂРёРЅСЃРєР°СЏ РїР»Р°С‚Р° Gigabyte H310M S2H, H310, Socket 1151-V2, DDR4, mATX', 4790.00, 2),
+  ('MSI B250M GAMING PRO', 'РњР°С‚РµСЂРёРЅСЃРєР°СЏ РїР»Р°С‚Р° MSI B250M GAMING PRO, B250, Socket 1151, DDR4, mATX', 5060.00, 2);
 
 DROP TABLE IF EXISTS orders;
 CREATE TABLE orders (
@@ -95,57 +96,57 @@ CREATE TABLE orders (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY index_of_user_id(user_id)
-) COMMENT = 'Заказы';
+) COMMENT = 'Р—Р°РєР°Р·С‹';
 
 DROP TABLE IF EXISTS orders_products;
 CREATE TABLE orders_products (
   id SERIAL PRIMARY KEY,
   order_id INT UNSIGNED,
   product_id INT UNSIGNED,
-  total INT UNSIGNED DEFAULT 1 COMMENT 'Количество заказанных товарных позиций',
+  total INT UNSIGNED DEFAULT 1 COMMENT 'РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·Р°РЅРЅС‹С… С‚РѕРІР°СЂРЅС‹С… РїРѕР·РёС†РёР№',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) COMMENT = 'Состав заказа';
+) COMMENT = 'РЎРѕСЃС‚Р°РІ Р·Р°РєР°Р·Р°';
 
 DROP TABLE IF EXISTS discounts;
 CREATE TABLE discounts (
   id SERIAL PRIMARY KEY,
   user_id INT UNSIGNED,
   product_id INT UNSIGNED,
-  discount FLOAT UNSIGNED COMMENT 'Величина скидки от 0.0 до 1.0',
+  discount FLOAT UNSIGNED COMMENT 'Р’РµР»РёС‡РёРЅР° СЃРєРёРґРєРё РѕС‚ 0.0 РґРѕ 1.0',
   started_at DATETIME,
   finished_at DATETIME,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY index_of_user_id(user_id),
   KEY index_of_product_id(product_id)
-) COMMENT = 'Скидки';
+) COMMENT = 'РЎРєРёРґРєРё';
 
 DROP TABLE IF EXISTS storehouses;
 CREATE TABLE storehouses (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) COMMENT 'Название',
+  name VARCHAR(255) COMMENT 'РќР°Р·РІР°РЅРёРµ',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) COMMENT = 'Склады';
+) COMMENT = 'РЎРєР»Р°РґС‹';
 
 DROP TABLE IF EXISTS storehouses_products;
 CREATE TABLE storehouses_products (
   id SERIAL PRIMARY KEY,
   storehouse_id INT UNSIGNED,
   product_id INT UNSIGNED,
-  value INT UNSIGNED COMMENT 'Запас товарной позиции на складе',
+  value INT UNSIGNED COMMENT 'Р—Р°РїР°СЃ С‚РѕРІР°СЂРЅРѕР№ РїРѕР·РёС†РёРё РЅР° СЃРєР»Р°РґРµ',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) COMMENT = 'Запасы на складе';
+) COMMENT = 'Р—Р°РїР°СЃС‹ РЅР° СЃРєР»Р°РґРµ';
 */
 
 
-/*(по желанию) Пусть имеется таблица рейсов flights (id, from, to) 
-и таблица городов cities (label, name). 
-Поля from, to и label содержат английские названия городов, 
-поле name — русское. 
-Выведите список рейсов flights с русскими названиями городов*/
+/*(РїРѕ Р¶РµР»Р°РЅРёСЋ) РџСѓСЃС‚СЊ РёРјРµРµС‚СЃСЏ С‚Р°Р±Р»РёС†Р° СЂРµР№СЃРѕРІ flights (id, from, to) 
+Рё С‚Р°Р±Р»РёС†Р° РіРѕСЂРѕРґРѕРІ cities (label, name). 
+РџРѕР»СЏ from, to Рё label СЃРѕРґРµСЂР¶Р°С‚ Р°РЅРіР»РёР№СЃРєРёРµ РЅР°Р·РІР°РЅРёСЏ РіРѕСЂРѕРґРѕРІ, 
+РїРѕР»Рµ name вЂ” СЂСѓСЃСЃРєРѕРµ. 
+Р’С‹РІРµРґРёС‚Рµ СЃРїРёСЃРѕРє СЂРµР№СЃРѕРІ flights СЃ СЂСѓСЃСЃРєРёРјРё РЅР°Р·РІР°РЅРёСЏРјРё РіРѕСЂРѕРґРѕРІ*/
 
 DROP DATABASE IF EXISTS airlogs;
 CREATE DATABASE airlogs;
@@ -157,9 +158,9 @@ CREATE TABLE cities (
 	name VARCHAR(100) NOT NULL
 );
 INSERT INTO cities(label, name)
-VALUES ('moscow','Москва'),('irkutsk','Иркутск'),
-	  ('novgorod','Новгород'),('kazan','Казань'),
-	  ('omsk','Омск'),('orsk','Орск');
+VALUES ('moscow','РњРѕСЃРєРІР°'),('irkutsk','РСЂРєСѓС‚СЃРє'),
+	  ('novgorod','РќРѕРІРіРѕСЂРѕРґ'),('kazan','РљР°Р·Р°РЅСЊ'),
+	  ('omsk','РћРјСЃРє');
 
 CREATE TABLE flights (
 	id SERIAL PRIMARY KEY,
@@ -186,9 +187,9 @@ ON UPDATE CASCADE;
 
 
 INSERT INTO flights(`from`, `to`)
-VALUES ('moscow','omsk'),('irkutsk','kazan'),
+VALUES ('moscow','omsk'),('novgorod','kazan'),
 	  ('irkutsk','moscow'),('omsk','irkutsk'),
-	  ('moscow','kazan'),('orsk','moscow');
+	  ('moscow','kazan');
 
 
 
